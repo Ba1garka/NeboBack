@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service
 @Transactional
 class PostService(
     private val postRepository: PostRepository,
-    private val drawingRepository: DrawingRepository,
-    private val userRepository: UserRepository
+    private val drawingRepository: DrawingRepository
 ) {
     fun createPost(author: User, request: CreatePostRequest): Post {
         val drawing = drawingRepository.findById(request.drawingId)

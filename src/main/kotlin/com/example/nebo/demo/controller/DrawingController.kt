@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 
 
 @RestController
-@RequestMapping("/api/drawings")
+@RequestMapping("/drawings")
 class DrawingController(
     private val drawingService: DrawingService,
     private val userRepository: UserRepository

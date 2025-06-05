@@ -33,35 +33,11 @@ class AuthService(
         return userRepository.save(user)
     }
 
-    fun getUserByEmail(email: String): User {
-        return userRepository.findByEmail(email)
-            ?: throw UsernameNotFoundException("User not found")
-    }
-
-    fun getUserDrawings(email: String): List<Drawing> {
-        return getUserByEmail(email).drawings
-    }
-
-    fun uploadDrawing(file: MultipartFile, user: User): Drawing {
-        val objectName = "drawings/${user.id}/${UUID.randomUUID()}_${file.originalFilename}"
-        val filePath = minioService.uploadFile(file, objectName)
-
-        val drawing = Drawing(
-            title = file.originalFilename ?: "Untitled",
-            filePath = filePath,
-            user = user
-        )
-
-        user.drawings.add(drawing)
-        userRepository.save(user)
-        return drawing
-    }
-
     fun updateUserAvatar(email: String, file: MultipartFile): String {
         val user = userRepository.findByEmail(email)
             ?: throw EntityNotFoundException("User not found")
 
-        // Удаляем старый аватар, если он есть
+        // Удаляем старый аватар
         user.filePath?.let { oldAvatarPath ->
             try {
                 minioService.deleteFile(oldAvatarPath)
@@ -70,14 +46,11 @@ class AuthService(
             }
         }
 
-        // Генерируем уникальное имя файла
         val fileExtension = file.originalFilename?.substringAfterLast('.', "")
         val objectName = "avatars/${UUID.randomUUID()}${if (fileExtension != null) ".$fileExtension" else ""}"
 
-        // Загружаем новый аватар
         val avatarUrl = minioService.uploadFile(file, objectName)
 
-        // Обновляем пользователя
         user.filePath = avatarUrl
         userRepository.save(user)
 

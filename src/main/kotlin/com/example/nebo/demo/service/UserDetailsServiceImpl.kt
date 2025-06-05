@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 @Transactional
-class UserDetailsServiceImpl(
+class MyUserDetails(
     private val userRepository: UserRepository
 ) : UserDetailsService {
 

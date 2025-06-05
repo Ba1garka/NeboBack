@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/drawings")
+@RequestMapping("/drawings")
 class PostController(
     private val postService: PostService,
     private val userRepository: UserRepository

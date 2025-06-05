@@ -81,16 +81,4 @@ class MinioService @Autowired constructor(
         }
     }
 
-    fun getFile(objectName: String): InputStream {
-        return try {
-            minioClient.getObject(
-                GetObjectArgs.builder()
-                    .bucket(minioProperties.bucketName)
-                    .`object`(objectName)
-                    .build()
-            )
-        } catch (e: Exception) {
-            throw RuntimeException("Failed to get file from MinIO", e)
-        }
-    }
 }
