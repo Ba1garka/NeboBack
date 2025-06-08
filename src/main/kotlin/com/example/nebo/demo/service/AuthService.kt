@@ -19,7 +19,7 @@ class AuthService(
 ) {
     fun register(request: RegisterRequest): User {
         if (userRepository.existsByEmail(request.email)) {
-            throw IllegalArgumentException("Email already exists")
+            throw Exception("Email already exists")
         }
 
         val user = User(
@@ -35,7 +35,7 @@ class AuthService(
 
     fun updateUserAvatar(email: String, file: MultipartFile): String {
         val user = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("User not found")
+            ?: throw Exception("User not found")
 
         // Удаляем старый аватар
         user.filePath?.let { oldAvatarPath ->

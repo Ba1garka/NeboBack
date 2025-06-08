@@ -19,10 +19,10 @@ class PostService(
 ) {
     fun createPost(author: User, request: CreatePostRequest): Post {
         val drawing = drawingRepository.findById(request.drawingId)
-            .orElseThrow { EntityNotFoundException("Drawing not found with id: ${request.drawingId}") }
+            .orElseThrow { Exception("Drawing not found with id: ${request.drawingId}") }
 
         if (drawing.user.id != author.id) {
-            throw IllegalStateException("Drawing does not belong to the user")
+            throw Exception("Drawing does not belong to the user")
         }
 
         return postRepository.save(

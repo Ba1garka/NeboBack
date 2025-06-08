@@ -35,7 +35,7 @@ class JsonUsernamePasswordAuthenticationFilter( authManager: AuthenticationManag
             authenticationManager.authenticate(authToken) //сырой токен, после проверки заменяется на аутентифицированный токен
             // -> DaoAuthenticationProvider -> UserDetailsService
         } catch (e: Exception) {
-            throw AuthenticationServiceException("Authentication failed", e)
+            throw Exception("Authentication failed", e)
         }
     }
 }

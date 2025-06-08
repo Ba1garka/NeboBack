@@ -16,7 +16,7 @@ class MyUserDetails(
 
     override fun loadUserByUsername(email: String): UserDetails {
         val user = userRepository.findByEmail(email)
-            ?: throw UsernameNotFoundException("User not found with email: $email")
+            ?: throw Exception("User not found with email: $email")
 
         return org.springframework.security.core.userdetails.User(
             user.email,

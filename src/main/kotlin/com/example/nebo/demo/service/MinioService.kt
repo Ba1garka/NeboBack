@@ -35,7 +35,7 @@ class MinioService @Autowired constructor(
                 )
             }
         } catch (e: Exception) {
-            throw RuntimeException("MinIO bucket operation failed", e)
+            throw Exception("MinIO bucket operation failed", e)
         }
     }
 
@@ -53,7 +53,7 @@ class MinioService @Autowired constructor(
             )
             getFileUrl(objectName)
         } catch (e: Exception) {
-            throw RuntimeException("Failed to upload file to MinIO", e)
+            throw Exception("Failed to upload file to MinIO", e)
         }
     }
 
@@ -68,8 +68,10 @@ class MinioService @Autowired constructor(
         )
     }
 
-    fun deleteFile(objectName: String) {
+    fun deleteFile(objectPath: String) {
         try {
+            val cleanPath = objectPath.removePrefix("http://localhost:9000/nebo/")
+            val objectName = cleanPath.substringBefore('?')
             minioClient.removeObject(
                 RemoveObjectArgs.builder()
                     .bucket(minioProperties.bucketName)
@@ -77,7 +79,7 @@ class MinioService @Autowired constructor(
                     .build()
             )
         } catch (e: Exception) {
-            throw RuntimeException("Failed to delete file from MinIO", e)
+            throw Exception("Failed to delete file from MinIO", e)
         }
     }
 

@@ -149,9 +149,6 @@ class PostController(
             )
 
             ResponseEntity.ok(response)
-        } catch (e: EntityNotFoundException) {
-            println("Post not found: $postId")
-            ResponseEntity.notFound().build()
         } catch (e: Exception) {
             println("Error processing like: ${e.message}")
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()

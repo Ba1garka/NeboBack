@@ -20,7 +20,7 @@ class MinioConfig(
                 .credentials(minioProperties.accessKey, minioProperties.secretKey)
                 .build()
         } catch (e: Exception) {
-            throw IllegalStateException("Failed to create MinIO client: ${e.message}", e)
+            throw Exception("Failed to create MinIO client: ${e.message}", e)
         }
     }
 }

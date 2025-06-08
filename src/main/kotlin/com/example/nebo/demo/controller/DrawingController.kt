@@ -93,4 +93,34 @@ class DrawingController(
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
     }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    fun deleteDrawing(
+        @PathVariable id: Long
+    ): ResponseEntity<Void> {
+        val authentication = SecurityContextHolder.getContext().authentication
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
+        if (!authentication.isAuthenticated) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        }
+
+        val user = userRepository.findByEmail(authentication.name)
+            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return try {
+            val drawing = drawingService.getDrawingById(id)
+
+            if (drawing.user.id != user.id) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            }
+
+            drawingService.deleteDrawing(id)
+            ResponseEntity.noContent().build()
+        } catch (e: Exception) {
+            println("Error deleting drawing: ${e.message}")
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+        }
+    }
 }

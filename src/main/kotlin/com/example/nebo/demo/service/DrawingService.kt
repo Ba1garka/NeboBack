@@ -1,11 +1,9 @@
 package com.example.nebo.demo.service
 
 import com.example.nebo.demo.model.Drawing
-import com.example.nebo.demo.dto.DrawingResponse
 import com.example.nebo.demo.model.User
 import com.example.nebo.demo.repository.DrawingRepository
 import com.example.nebo.demo.repository.UserRepository
-import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -40,8 +38,24 @@ class DrawingService(
 
     @Transactional
     fun getDrawingsByUserEmail(email: String): List<Drawing> {
-        val user = userRepository.findByEmail(email)
-            ?: throw EntityNotFoundException("User not found")
+        val user = userRepository.findByEmail(email) ?: throw Exception("User not found")
         return drawingRepository.findByUser(user)
+    }
+
+    @Transactional
+    fun getDrawingById(id: Long): Drawing {
+        return drawingRepository.findById(id).orElseThrow { Exception("Drawing with id $id not found") }
+    }
+
+    @Transactional
+    fun deleteDrawing(id: Long) {
+        val drawing = getDrawingById(id)
+        try {
+            println("путь: " + drawing.filePath)
+            minioService.deleteFile(drawing.filePath)
+            drawingRepository.deleteById(id)
+        } catch (e: Exception) {
+            throw Exception("Failed to delete drawing with id $id", e)
+        }
     }
 }
