@@ -30,6 +30,4 @@ data class Post(
     )
     @JsonIgnore
     val likedByUsers: MutableSet<User> = mutableSetOf()
-) {
-    fun getAuthorAvatarUrl(): String? = author.filePath
-}
+)

@@ -34,20 +34,10 @@ data class User(
     val roles: Set<String> = setOf("USER"),
     @Column(name = "file_path", length = 2000)
     var filePath: String
-) : UserDetails, Serializable {
-    override fun toString(): String {
-        return "User(id=$id, email='$email')" // Не включаем drawings в toString
-    }
+) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return roles.map { SimpleGrantedAuthority("ROLE_$it") }
     }
     override fun getPassword(): String = passwordHash
     override fun getUsername(): String = email
-    override fun isAccountNonExpired(): Boolean = true
-    override fun isAccountNonLocked(): Boolean = true
-    override fun isCredentialsNonExpired(): Boolean = true
-    override fun isEnabled(): Boolean = true
-    companion object {
-        private const val serialVersionUID = 1L
-    }
 }
