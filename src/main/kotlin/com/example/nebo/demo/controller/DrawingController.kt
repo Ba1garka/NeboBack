@@ -14,17 +14,13 @@ import org.springframework.security.core.context.SecurityContextHolder
 
 @RestController
 @RequestMapping("/drawings")
-class DrawingController(
-    private val drawingService: DrawingService,
-    private val userRepository: UserRepository
-) {
+class DrawingController(private val drawingService: DrawingService, private val userRepository: UserRepository) {
     @PostMapping("/upload")
     @Transactional
     fun uploadDrawing(
         @RequestParam("file") file: MultipartFile
     ): ResponseEntity<DrawingResponse> {
-        val authentication = SecurityContextHolder.getContext().authentication
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val authentication = SecurityContextHolder.getContext().authentication ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         if (!authentication.isAuthenticated) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -33,8 +29,7 @@ class DrawingController(
         println("Received file: ${file.originalFilename}, size: ${file.size}")
         println("Authenticated user: ${authentication.name}")
 
-        val user = userRepository.findByEmail(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        val user = userRepository.findByEmail(authentication.name) ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return try {
             val drawing = drawingService.uploadDrawing(file, user)

@@ -1,7 +1,7 @@
 package com.example.nebo.demo.service
 
 import com.example.nebo.demo.model.Drawing
-import com.example.nebo.demo.model.User
+import com.example.nebo.demo.model.MyUser
 import com.example.nebo.demo.repository.DrawingRepository
 import com.example.nebo.demo.repository.UserRepository
 import jakarta.transaction.Transactional
@@ -17,7 +17,7 @@ class DrawingService(
     private val userRepository: UserRepository,
     private val minioService: MinioService
 ) {
-    fun uploadDrawing(file: MultipartFile, user: User): Drawing {
+    fun uploadDrawing(file: MultipartFile, user: MyUser): Drawing {
         val allowedTypes = setOf("image/jpeg", "image/png")
         if (!allowedTypes.contains(file.contentType)) {
             throw IllegalArgumentException("Unsupported file type")

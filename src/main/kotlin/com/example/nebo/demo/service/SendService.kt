@@ -3,15 +3,13 @@ package com.example.nebo.demo.service
 import com.example.nebo.demo.dto.SendDto
 import com.example.nebo.demo.model.Drawing
 import com.example.nebo.demo.model.Send
-import com.example.nebo.demo.model.User
+import com.example.nebo.demo.model.MyUser
 import com.example.nebo.demo.repository.SendRepository
 import org.springframework.stereotype.Service
 
 @Service
-class SendService(
-    private val sendRepository: SendRepository
-) {
-    fun createSend(drawing: Drawing, sender: User, recipient: User): Send {
+class SendService(private val sendRepository: SendRepository) {
+    fun createSend(drawing: Drawing, sender: MyUser, recipient: MyUser): Send {
         val send = Send(
             drawing = drawing,
             sender = sender,

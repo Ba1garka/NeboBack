@@ -3,7 +3,7 @@ package com.example.nebo.demo.service
 import com.example.nebo.demo.dto.CreatePostRequest
 import com.example.nebo.demo.dto.PostResponse
 import com.example.nebo.demo.model.Post
-import com.example.nebo.demo.model.User
+import com.example.nebo.demo.model.MyUser
 import com.example.nebo.demo.repository.DrawingRepository
 import com.example.nebo.demo.repository.PostRepository
 import com.example.nebo.demo.repository.UserRepository
@@ -17,7 +17,7 @@ class PostService(
     private val postRepository: PostRepository,
     private val drawingRepository: DrawingRepository
 ) {
-    fun createPost(author: User, request: CreatePostRequest): Post {
+    fun createPost(author: MyUser, request: CreatePostRequest): Post {
         val drawing = drawingRepository.findById(request.drawingId)
             .orElseThrow { Exception("Drawing not found with id: ${request.drawingId}") }
 
@@ -50,7 +50,7 @@ class PostService(
         }
     }
 
-    fun likePost(postId: Long, user: User): Post {
+    fun likePost(postId: Long, user: MyUser): Post {
         val post = postRepository.findById(postId)
             .orElseThrow { EntityNotFoundException("Post not found") }
 
@@ -62,7 +62,7 @@ class PostService(
         return post
     }
 
-    fun unlikePost(postId: Long, user: User): Post {
+    fun unlikePost(postId: Long, user: MyUser): Post {
         val post = postRepository.findById(postId)
             .orElseThrow { EntityNotFoundException("Post not found") }
 
@@ -72,5 +72,9 @@ class PostService(
         }
 
         return post
+    }
+
+    fun deletePost(postId: Long) {
+        postRepository.deleteById(postId)
     }
 }

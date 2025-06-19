@@ -14,17 +14,11 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/drawings")
-class PostController(
-    private val postService: PostService,
-    private val userRepository: UserRepository
-) {
+class PostController(private val postService: PostService, private val userRepository: UserRepository) {
     @PostMapping("/post")
     @Transactional
-    fun createPost(
-        @RequestBody request: CreatePostRequest
-    ): ResponseEntity<PostResponse> {
-        val authentication = SecurityContextHolder.getContext().authentication
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+    fun createPost(@RequestBody request: CreatePostRequest): ResponseEntity<PostResponse> {
+        val authentication = SecurityContextHolder.getContext().authentication ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         if (!authentication.isAuthenticated) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -33,8 +27,7 @@ class PostController(
         println("Creating post for user: ${authentication.name}")
         println("Post details: drawingId=${request.drawingId}, description=${request.description}")
 
-        val user = userRepository.findByEmail(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        val user = userRepository.findByEmail(authentication.name) ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return try {
             val post = postService.createPost(user, request)
@@ -74,9 +67,7 @@ class PostController(
 
     @PostMapping("/like/{postId}")
     @Transactional
-    fun likePost(
-        @PathVariable postId: Long
-    ): ResponseEntity<PostResponse> {
+    fun likePost(@PathVariable postId: Long): ResponseEntity<PostResponse> {
         val authentication = SecurityContextHolder.getContext().authentication
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
@@ -107,9 +98,6 @@ class PostController(
             )
 
             ResponseEntity.ok(response)
-        } catch (e: EntityNotFoundException) {
-            println("Post not found: $postId")
-            ResponseEntity.notFound().build()
         } catch (e: Exception) {
             println("Error processing like: ${e.message}")
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
@@ -118,9 +106,7 @@ class PostController(
 
     @PostMapping("/unlike/{postId}")
     @Transactional
-    fun unlikePost(
-        @PathVariable postId: Long
-    ): ResponseEntity<PostResponse> {
+    fun unlikePost(@PathVariable postId: Long): ResponseEntity<PostResponse> {
         val authentication = SecurityContextHolder.getContext().authentication
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
@@ -128,8 +114,7 @@ class PostController(
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
 
-        val user = userRepository.findByEmail(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        val user = userRepository.findByEmail(authentication.name) ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return try {
             val updatedPost = postService.unlikePost(postId, user)
@@ -151,6 +136,27 @@ class PostController(
             ResponseEntity.ok(response)
         } catch (e: Exception) {
             println("Error processing like: ${e.message}")
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+        }
+    }
+
+    @DeleteMapping("/delete/{postId}")
+    @Transactional
+    fun deletePost(@PathVariable postId: Long): ResponseEntity<Unit> {
+        val authentication = SecurityContextHolder.getContext().authentication ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
+        if (!authentication.isAuthenticated) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        }
+
+        val user = userRepository.findByEmail(authentication.name) ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+        return try {
+            postService.deletePost(postId)
+            println("Successfully deleted post $postId")
+            ResponseEntity.noContent().build()
+        } catch (e: Exception) {
+            println("Error deleting post: ${e.message}")
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
     }

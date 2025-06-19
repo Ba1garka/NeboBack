@@ -8,9 +8,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(MinioProperties::class)
-class MinioConfig(
-    private val minioProperties: MinioProperties
-) {
+class MinioConfig(private val minioProperties: MinioProperties) {
 
     @Bean
     fun minioClient(): MinioClient {

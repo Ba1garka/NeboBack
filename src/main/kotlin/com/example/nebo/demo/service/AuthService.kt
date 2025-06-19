@@ -2,7 +2,7 @@ package com.example.nebo.demo.service
 
 import com.example.nebo.demo.dto.RegisterRequest
 import com.example.nebo.demo.model.Drawing
-import com.example.nebo.demo.model.User
+import com.example.nebo.demo.model.MyUser
 import com.example.nebo.demo.repository.UserRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -17,12 +17,12 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val minioService: MinioService
 ) {
-    fun register(request: RegisterRequest): User {
+    fun register(request: RegisterRequest): MyUser {
         if (userRepository.existsByEmail(request.email)) {
             throw Exception("Email already exists")
         }
 
-        val user = User(
+        val user = MyUser(
             email = request.email,
             passwordHash = passwordEncoder.encode(request.password),
             name = request.name,
@@ -34,8 +34,7 @@ class AuthService(
     }
 
     fun updateUserAvatar(email: String, file: MultipartFile): String {
-        val user = userRepository.findByEmail(email)
-            ?: throw Exception("User not found")
+        val user = userRepository.findByEmail(email) ?: throw Exception("User not found")
 
         // Удаляем старый аватар
         user.filePath?.let { oldAvatarPath ->

@@ -25,8 +25,7 @@ class SendController(
         @RequestParam("drawingId") drawingId: Long,
         @RequestParam("recipientName") recipientName: String
     ): ResponseEntity<SendDto> {
-        val authentication = SecurityContextHolder.getContext().authentication
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val authentication = SecurityContextHolder.getContext().authentication ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         if (!authentication.isAuthenticated) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
@@ -34,8 +33,7 @@ class SendController(
 
         println("Sender: ${authentication.name}")
 
-        val sender = userRepository.findByEmail(authentication.name)
-            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        val sender = userRepository.findByEmail(authentication.name) ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         return try {
 

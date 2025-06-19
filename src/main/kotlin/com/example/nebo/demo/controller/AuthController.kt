@@ -2,7 +2,7 @@ package com.example.nebo.demo.controller
 
 import com.example.nebo.demo.dto.RegisterRequest
 import com.example.nebo.demo.dto.UserResponse
-import com.example.nebo.demo.model.User
+import com.example.nebo.demo.model.MyUser
 import com.example.nebo.demo.repository.UserRepository
 import com.example.nebo.demo.service.AuthService
 import jakarta.persistence.EntityManager
@@ -45,7 +45,7 @@ class AuthController(
     }
 
     @PostMapping("/register")
-    fun register(@Valid @RequestBody request: RegisterRequest): ResponseEntity<User> {
+    fun register(@Valid @RequestBody request: RegisterRequest): ResponseEntity<MyUser> {
         return ResponseEntity.ok(authService.register(request))
     }
 
@@ -68,7 +68,7 @@ class AuthController(
         return ResponseEntity.ok(createUserResponse(user))
     }
 
-    private fun createUserResponse(user: User): UserResponse {
+    private fun createUserResponse(user: MyUser): UserResponse {
         return UserResponse.fromUser(user)
     }
 

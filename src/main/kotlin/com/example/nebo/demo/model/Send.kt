@@ -16,11 +16,11 @@ data class Send(
 
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
-    val sender: User,
+    val sender: MyUser,
 
     @ManyToOne
     @JoinColumn(name = "recipient_id", nullable = false)
-    val recipient: User,
+    val recipient: MyUser,
 
     @Column(name = "sent_at", nullable = false)
     val sentAt: LocalDateTime = LocalDateTime.now()

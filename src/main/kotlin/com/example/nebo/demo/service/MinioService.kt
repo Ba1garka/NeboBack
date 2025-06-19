@@ -12,10 +12,7 @@ import java.util.concurrent.TimeUnit
 import com.example.nebo.demo.model.MinioProperties
 
 @Service
-class MinioService @Autowired constructor(
-    private val minioClient: MinioClient,
-    private val minioProperties: MinioProperties
-) {
+class MinioService @Autowired constructor(private val minioClient: MinioClient, private val minioProperties: MinioProperties) {
 
     init {
         createBucketIfNotExists()

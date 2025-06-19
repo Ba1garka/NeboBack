@@ -12,7 +12,7 @@ data class Post(
     val id: Long? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    val author: User,
+    val author: MyUser,
     @Column(length = 2000)
     val description: String,
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,11 +23,7 @@ data class Post(
     @Column(name = "likes_count", nullable = false)
     var likesCount: Long = 0,
     @ManyToMany
-    @JoinTable(
-        name = "post_likes",
-        joinColumns = [JoinColumn(name = "post_id")],
-        inverseJoinColumns = [JoinColumn(name = "user_id")]
-    )
+    @JoinTable(name = "post_likes", joinColumns = [JoinColumn(name = "post_id")], inverseJoinColumns = [JoinColumn(name = "user_id")])
     @JsonIgnore
-    val likedByUsers: MutableSet<User> = mutableSetOf()
+    val likedByUsers: MutableSet<MyUser> = mutableSetOf()
 )

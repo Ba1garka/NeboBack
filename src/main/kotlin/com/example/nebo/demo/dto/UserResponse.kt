@@ -1,6 +1,6 @@
 package com.example.nebo.demo.dto
 
-import com.example.nebo.demo.model.User
+import com.example.nebo.demo.model.MyUser
 
 data class UserResponse(
     val email: String,
@@ -11,7 +11,7 @@ data class UserResponse(
     val avatarUrl: String?
 ) {
     companion object {
-        fun fromUser(user: User): UserResponse {
+        fun fromUser(user: MyUser): UserResponse {
             return UserResponse(
                 email = user.email,
                 name = user.name,
